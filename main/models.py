@@ -87,13 +87,41 @@ class Cube():
         self.top = [self.deck.pop() for _ in range(9)]
         self.depths = [1] * 9
         self.lives = [True] * 9
-        self.highest = [0, self.top[0]]
-        self.lowest = [0, self.top[0]]
-        for i in range(1, 9):
+        self.life_count = 9
+
+    def set_highest_lowest(self):
+        """Set the highest and lowest cards in play.
+
+        """
+        self.highest = [-1, Card(-1, -1)]
+        self.lowest = [-1, Card(15, 15)]
+        for i in range(9):
+            if not self.lives[i]:
+                continue
             if self.top[i] > self.highest[1]:
                 self.highest = [i, self.top[i]]
             if self.top[i] < self.lowest[1]:
                 self.lowest = [i, self.top[i]]
+
+    def bet(self, index, higher):
+        if not self.lives[index]:
+            return
+        new_card = self.deck.pop()
+        old_card = self.top[index]
+        self.top[index] = new_card
+        self.depths[index] += 1
+        if higher and (new_card <= old_card):
+            self.lives[index] = False
+            self.life_count -= 1
+            self.set_highest_lowest()
+            return False
+        if (not higher) and (new_card >= old_card):
+            self.lives[index] = False
+            self.life_count -= 1
+            self.set_highest_lowest()
+            return False
+        self.set_highest_lowest()
+        return True
 
     def get_most_extreme(self):
         """Return the most extreme card and its index.
