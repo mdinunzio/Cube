@@ -88,6 +88,7 @@ class Cube():
         self.depths = [1] * 9
         self.lives = [True] * 9
         self.life_count = 9
+        self.set_highest_lowest()
 
     def set_highest_lowest(self):
         """Set the highest and lowest cards in play.
